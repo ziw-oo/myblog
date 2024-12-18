@@ -1,5 +1,7 @@
 {% extends 'blog/base.html' %}
 
+{% block body_class %}post-detail{% endblock %}
+
 {% block content %}
   <div class="post">
     {% if post.published_date %}
@@ -11,6 +13,47 @@
     <h1>{{ post.title }}</h1>
     <p>{{ post.text|linebreaksbr }}</p>
   </div>
+
+<h2>comments</h2>
+<div>
+    {% for comment in post.comments.all %}
+        <div>
+            <strong>{{ comment.author }}</strong> ({{ comment.created_date }})
+            <p>{{ comment.text }}</p>
+        </div>
+    {% empty %}
+        <p>no comments yet</p>
+    {% endfor %}
+</div>
+
+{% if user.is_authenticated %}
+    <h2></h2>
+    <form method="post" action="{% url 'add_comment' pk=post.pk %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-comment">just type !! words for me ◛ </button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">log in</a> to leave a comment </p>
+  {% endif %}
+
+<div class="share-buttons">
+    <!-- Instagram 공유 버튼 (프로필 링크로 대체) -->
+    <a href="https://www.instagram.com" target="_blank" class="btn btn-instagram">
+        share on Instagram
+    </a>
+    <!-- 트위터 공유 버튼 -->
+    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" class="btn btn-twitter">
+        share on X
+    </a>
+    <!-- 이메일 공유 버튼 -->
+    <a href="mailto:?subject=Check this out&body={{ request.build_absolute_uri }}" class="btn btn-email">
+        share via Email
+    </a>
+</div>
+
+
+
 {% endblock %}
 
 {% if user.is_authenticated %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% extends 'blog/base.html' %}
+
+{% block content %}
+  <h1> add comment! "{{ post.title }}"</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-comment">add commnet !</button>
+  </form>
+  <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-secondary">cancel</a>
+{% endblock %}
+
+
+</body>
+</html>
